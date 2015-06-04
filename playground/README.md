@@ -7,3 +7,9 @@ Javaによる関数型プログラミング Java8ラムダ式とStream を読ん
 cd ./playground
 ./gradlew build
 ```
+
+コーディング中はこっち
+
+```
+./gradlew --daemon --info test
+```
