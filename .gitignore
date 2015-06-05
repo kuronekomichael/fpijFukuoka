@@ -1,0 +1,26 @@
+# ref: https://github.com/sue445/dotfiles/blob/master/_gitignore
+
+# editor cache
+*.swp
+*.orig
+
+# OS cache file
+.DS_Store
+Thumbs.db
+
+# IDE meta data
+## IntelliJ
+.idea/
+out/
+*.iml
+*.ipr
+*.iws
+
+## Eclipse
+.settings/
+.classpath
+.project
+
+## gradle
+.gradle/
+build/
