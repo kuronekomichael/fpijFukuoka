@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Function;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import java.awt.Color;
 
 public class TestDesignSample {
 
@@ -48,6 +51,85 @@ public class TestDesignSample {
     }
 
     @Test
+    public void Decoratorパターン1() {
+        final Camera camera = new Camera();
+        final Consumer<String> printCaptured = (filterInfo) ->
+            System.out.println(String.format("with %s: %s", filterInfo, camera.capture(new Color(200, 100, 200))));
+
+        printCaptured.accept("no filter");
+        //TODO: STDOUTを使わずに、テストにするべし
+    }
+
+    @Test
+    public void Decoratorパターン2() {
+        final Camera camera = new Camera();
+        final Consumer<String> printCaptured = (filterInfo) ->
+            System.out.println(String.format("with %s: %s", filterInfo, camera.capture(new Color(200, 100, 200))));
+
+        camera.setFilters(Color::brighter);
+
+        printCaptured.accept("brighter filter");
+
+        camera.setFilters(Color::darker);
+
+        printCaptured.accept("darker filter");
+        //TODO: STDOUTを使わずに、テストにするべし
+    }
+
+    @Test
+    public void Decoratorパターン3() {
+        final Camera camera = new Camera();
+        final Consumer<String> printCaptured = (filterInfo) ->
+            System.out.println(String.format("with %s: %s", filterInfo, camera.capture(new Color(200, 100, 200))));
+
+        camera.setFilters(Color::darker, Color::darker);
+
+        printCaptured.accept("darker & darker filter");
+        //TODO: STDOUTを使わずに、テストにするべし
+    }
+
+    @Test
+    public void defaultメソッドで遊んでみる() {
+
+        class SeaPlane extends Vehicle implements FastFly, Sail {
+            private int altitude;
+            public void cruise() {
+                System.out.print("SearPlane::cruise currently cruise like: ");
+                if (altitude > 0) {
+                    FastFly.super.cruise();
+                } else {
+                    Sail.super.cruise();
+                }
+            }
+        }
+
+        SeaPlane seaPlane = new SeaPlane();
+        seaPlane.takeOff();
+        seaPlane.land();
+        seaPlane.turn();
+        seaPlane.cruise();
+    }
+
+    @Test
+    public void 単純にチェーンにしてみる() {
+        new Mailer().from("build@example.com")
+                     .to("michael@example.com")
+                     .subject("Build Notification")
+                     .body("I am lier!!!")
+                     .send();
+    }
+
+    @Test
+    public void ラムダ式でより流暢に() {
+        FluentMailer.send(mailer ->
+            mailer.from("build@example.com")
+                  .to("michael@example.com")
+                  .subject("Build Notification")
+                  .body("I am lier!!!"));
+    }
+
+
+    @Test
     public void 例外処理１()  {
         List<String> paths = DesignSample.printPathsWitExceptionMessages();
 
@@ -68,6 +150,7 @@ public class TestDesignSample {
         } catch (IOException ie) {
             fail(ie.getMessage());
         }
+        //TODO: 本当にファイルは出力しないテストにするべし
     }
 
 
